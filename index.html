@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RoboSoccer Tournament Live Scores</title>
   <style>
-    /* (Keep your existing CSS styles unchanged) */
     :root {
       --primary: #1a73e8;
       --secondary: #34a853;
@@ -56,7 +55,185 @@
     .tab-content.active {
       display: block;
     }
-    /* (Rest of your CSS styles remain the same) */
+    .match-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .match-header {
+      background-color: #f1f3f4;
+      padding: 0.5rem;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+    }
+    .match-status {
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+    .status-live {
+      background-color: var(--danger);
+    }
+    .status-upcoming {
+      background-color: var(--gray);
+    }
+    .status-completed {
+      background-color: var(--secondary);
+    }
+    .match-content {
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 40%;
+    }
+    .team-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      overflow: hidden;
+    }
+    .score-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 20%;
+    }
+    .score {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 0 0.5rem;
+    }
+    .score-divider {
+      font-size: 1.5rem;
+      color: var(--gray);
+    }
+    .match-footer {
+      padding: 0.5rem;
+      background-color: #f1f3f4;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--gray);
+    }
+    .standings-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .standings-table th,
+    .standings-table td {
+      padding: 0.5rem;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+    .standings-table th {
+      background-color: #f1f3f4;
+      font-weight: bold;
+    }
+    .standings-table tr:hover {
+      background-color: #f9f9f9;
+    }
+    .team-cell {
+      display: flex;
+      align-items: center;
+      text-align: left;
+    }
+    .team-cell .team-logo {
+      width: 30px;
+      height: 30px;
+      margin-right: 0.5rem;
+      margin-bottom: 0;
+    }
+    .groups-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+    .group-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .group-header {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.5rem;
+      font-weight: bold;
+      text-align: center;
+    }
+    .admin-form {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background-color: #0d5bba;
+    }
+    @media (max-width: 768px) {
+      .match-content {
+        flex-direction: column;
+        align-items: center;
+      }
+      .team {
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+      .score-container {
+        width: 100%;
+        margin: 1rem 0;
+      }
+      .standings-table {
+        font-size: 0.9rem;
+      }
+      .team-cell {
+        flex-direction: column;
+        text-align: center;
+      }
+      .team-cell .team-logo {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -64,7 +241,6 @@
     <h1>RoboSoccer Tournament</h1>
     <p id="current-date">February 17, 2025</p>
   </header>
-
   <div class="container">
     <div class="tabs">
       <div class="tab active" data-tab="live-matches">Live Matches</div>
@@ -75,9 +251,7 @@
 
     <div id="live-matches" class="tab-content active">
       <h2>Live Matches</h2>
-      <div id="matches-container">
-        <!-- Matches will be populated here -->
-      </div>
+      <div id="matches-container"></div>
     </div>
 
     <div id="standings" class="tab-content">
@@ -97,17 +271,13 @@
             <th>Pts</th>
           </tr>
         </thead>
-        <tbody id="standings-body">
-          <!-- Standings will be populated here -->
-        </tbody>
+        <tbody id="standings-body"></tbody>
       </table>
     </div>
 
     <div id="groups" class="tab-content">
       <h2>Tournament Groups</h2>
-      <div class="groups-container" id="groups-container">
-        <!-- Groups will be populated here -->
-      </div>
+      <div class="groups-container" id="groups-container"></div>
     </div>
 
     <div id="admin" class="tab-content">
@@ -129,6 +299,7 @@
       <div id="admin-content" style="display: none;">
         <h2>Admin Panel</h2>
         <div class="admin-form">
+          <!-- Update Match Section -->
           <h3>Update Match Score</h3>
           <div class="form-group">
             <label for="match-select">Select Match:</label>
@@ -156,6 +327,7 @@
             <button id="update-score-btn">Update Score</button>
           </div>
 
+          <!-- Add Match Section -->
           <h3>Add New Match</h3>
           <div class="form-group">
             <label for="new-team1">Team 1:</label>
@@ -181,7 +353,7 @@
             <button id="add-match-btn">Add Match</button>
           </div>
 
-          <!-- New Team Option (Logo not required) -->
+          <!-- Add Team Section (Logo not required) -->
           <h3>Add New Team</h3>
           <div class="form-group">
             <label for="new-team-name">Team Name:</label>
@@ -281,7 +453,7 @@
       });
     }
 
-    // Render Groups (using similar logic as before)
+    // Render Groups
     async function renderGroups() {
       const groupsContainer = document.getElementById('groups-container');
       groupsContainer.innerHTML = '';
@@ -432,7 +604,7 @@
       });
     }
 
-    // Setup the Add New Team option (team logo is now generated automatically)
+    // Setup the Add New Team option (team logo is generated automatically)
     document.getElementById('add-team-btn').addEventListener('click', async () => {
       const teamName = document.getElementById('new-team-name').value.trim();
       if (!teamName) {
@@ -442,18 +614,24 @@
       // Generate a default abbreviation (first 2 letters in uppercase)
       const defaultLogo = teamName.substring(0,2).toUpperCase();
       const newTeam = { name: teamName, logo: defaultLogo };
-      const response = await fetch('/api/teams', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newTeam)
-      });
-      if (response.ok) {
-        await loadData();
-        alert('Team added successfully!');
-        document.getElementById('new-team-name').value = '';
-        await populateAdminControls();
-      } else {
-        alert('Failed to add team!');
+      try {
+        const response = await fetch('/api/teams', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newTeam)
+        });
+        if (response.ok) {
+          await loadData();
+          alert('Team added successfully!');
+          document.getElementById('new-team-name').value = '';
+          await populateAdminControls();
+        } else {
+          const errorText = await response.text();
+          alert('Failed to add team! ' + errorText);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('An error occurred while adding team!');
       }
     });
 
@@ -469,7 +647,7 @@
       await renderGroups();
     }
 
-    // Admin login logic remains unchanged
+    // Admin login logic
     document.getElementById('admin-login-btn').addEventListener('click', async () => {
       const username = document.getElementById('admin-username').value;
       const password = document.getElementById('admin-password').value;
@@ -484,7 +662,7 @@
       }
     });
 
-    // Tab functionality remains unchanged
+    // Tab functionality
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
