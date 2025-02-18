@@ -128,6 +128,7 @@
       <!-- Admin Content (hidden until login is successful) -->
       <div id="admin-content" style="display: none;">
         <h2>Admin Panel</h2>
+        <!-- Existing Match Controls -->
         <div class="admin-form">
           <h3>Update Match Score</h3>
           <div class="form-group">
@@ -155,6 +156,7 @@
           <div class="form-group">
             <button id="update-score-btn">Update Score</button>
           </div>
+
           <h3>Add New Match</h3>
           <div class="form-group">
             <label for="new-team1">Team 1:</label>
@@ -178,6 +180,20 @@
           </div>
           <div class="form-group">
             <button id="add-match-btn">Add Match</button>
+          </div>
+
+          <!-- New Team Option -->
+          <h3>Add New Team</h3>
+          <div class="form-group">
+            <label for="new-team-name">Team Name:</label>
+            <input type="text" id="new-team-name" placeholder="Enter team name" />
+          </div>
+          <div class="form-group">
+            <label for="new-team-logo">Team Logo/Abbreviation:</label>
+            <input type="text" id="new-team-logo" placeholder="Enter team logo or abbreviation" />
+          </div>
+          <div class="form-group">
+            <button id="add-team-btn">Add Team</button>
           </div>
         </div>
       </div>
@@ -270,7 +286,7 @@
       });
     }
 
-    // Render Groups (similar logic to your previous implementation)
+    // Render Groups (using similar logic as before)
     async function renderGroups() {
       const groupsContainer = document.getElementById('groups-container');
       groupsContainer.innerHTML = '';
@@ -284,8 +300,6 @@
           groupTeamIds.add(match.team1);
           groupTeamIds.add(match.team2);
         });
-        // For simplicity, using the backend standings for overall standings.
-        // You can adjust this to calculate group-specific standings if needed.
         let standingsHTML = '';
         teams.filter(team => groupTeamIds.has(team.id)).forEach((team, index) => {
           standingsHTML += `
@@ -423,6 +437,31 @@
       });
     }
 
+    // Setup the Add New Team option
+    document.getElementById('add-team-btn').addEventListener('click', async () => {
+      const teamName = document.getElementById('new-team-name').value.trim();
+      const teamLogo = document.getElementById('new-team-logo').value.trim();
+      if (!teamName || !teamLogo) {
+        alert('Please enter both team name and logo/abbreviation!');
+        return;
+      }
+      const newTeam = { name: teamName, logo: teamLogo };
+      const response = await fetch('/api/teams', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newTeam)
+      });
+      if (response.ok) {
+        await loadData();
+        alert('Team added successfully!');
+        document.getElementById('new-team-name').value = '';
+        document.getElementById('new-team-logo').value = '';
+        await populateAdminControls();
+      } else {
+        alert('Failed to add team!');
+      }
+    });
+
     // Load data and render all sections
     async function loadData() {
       await Promise.all([fetchTeams(), fetchMatches()]);
@@ -479,4 +518,3 @@
   </script>
 </body>
 </html>
-
