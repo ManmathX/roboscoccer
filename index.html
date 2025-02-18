@@ -128,7 +128,6 @@
       <!-- Admin Content (hidden until login is successful) -->
       <div id="admin-content" style="display: none;">
         <h2>Admin Panel</h2>
-        <!-- Existing Match Controls -->
         <div class="admin-form">
           <h3>Update Match Score</h3>
           <div class="form-group">
@@ -182,15 +181,11 @@
             <button id="add-match-btn">Add Match</button>
           </div>
 
-          <!-- New Team Option -->
+          <!-- New Team Option (Logo not required) -->
           <h3>Add New Team</h3>
           <div class="form-group">
             <label for="new-team-name">Team Name:</label>
             <input type="text" id="new-team-name" placeholder="Enter team name" />
-          </div>
-          <div class="form-group">
-            <label for="new-team-logo">Team Logo/Abbreviation:</label>
-            <input type="text" id="new-team-logo" placeholder="Enter team logo or abbreviation" />
           </div>
           <div class="form-group">
             <button id="add-team-btn">Add Team</button>
@@ -437,15 +432,16 @@
       });
     }
 
-    // Setup the Add New Team option
+    // Setup the Add New Team option (team logo is now generated automatically)
     document.getElementById('add-team-btn').addEventListener('click', async () => {
       const teamName = document.getElementById('new-team-name').value.trim();
-      const teamLogo = document.getElementById('new-team-logo').value.trim();
-      if (!teamName || !teamLogo) {
-        alert('Please enter both team name and logo/abbreviation!');
+      if (!teamName) {
+        alert('Please enter a team name!');
         return;
       }
-      const newTeam = { name: teamName, logo: teamLogo };
+      // Generate a default abbreviation (first 2 letters in uppercase)
+      const defaultLogo = teamName.substring(0,2).toUpperCase();
+      const newTeam = { name: teamName, logo: defaultLogo };
       const response = await fetch('/api/teams', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -455,7 +451,6 @@
         await loadData();
         alert('Team added successfully!');
         document.getElementById('new-team-name').value = '';
-        document.getElementById('new-team-logo').value = '';
         await populateAdminControls();
       } else {
         alert('Failed to add team!');
@@ -518,3 +513,4 @@
   </script>
 </body>
 </html>
+
