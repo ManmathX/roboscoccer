@@ -4,254 +4,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RoboSoccer Tournament Live Scores</title>
-  <style>
-    :root {
-      --primary: #1a73e8;
-      --secondary: #34a853;
-      --dark: #202124;
-      --light: #f8f9fa;
-      --gray: #5f6368;
-      --danger: #ea4335;
-      --warning: #fbbc04;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      line-height: 1.6;
-      color: var(--dark);
-      background-color: var(--light);
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: var(--primary);
-      color: white;
-      padding: 1rem;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1rem;
-    }
-    .tabs {
-      display: flex;
-      border-bottom: 1px solid #ddd;
-      margin-bottom: 2rem;
-    }
-    .tab {
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .tab.active {
-      border-bottom: 3px solid var(--primary);
-      color: var(--primary);
-      font-weight: bold;
-    }
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    .match-card {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    .match-header {
-      background-color: #f1f3f4;
-      padding: 0.5rem;
-      font-weight: bold;
-      display: flex;
-      justify-content: space-between;
-    }
-    .match-status {
-      color: white;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-      font-size: 0.8rem;
-    }
-    .status-live {
-      background-color: var(--danger);
-    }
-    .status-upcoming {
-      background-color: var(--gray);
-    }
-    .status-completed {
-      background-color: var(--secondary);
-    }
-    .match-content {
-      padding: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .team {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 40%;
-    }
-    .team-logo {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: #eee;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 0.5rem;
-      overflow: hidden;
-    }
-    .score-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 20%;
-    }
-    .score {
-      font-size: 2rem;
-      font-weight: bold;
-      margin: 0 0.5rem;
-    }
-    .score-divider {
-      font-size: 1.5rem;
-      color: var(--gray);
-    }
-    .match-footer {
-      padding: 0.5rem;
-      background-color: #f1f3f4;
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--gray);
-    }
-    .standings-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .standings-table th,
-    .standings-table td {
-      padding: 0.5rem;
-      text-align: center;
-      border-bottom: 1px solid #ddd;
-    }
-    .standings-table th {
-      background-color: #f1f3f4;
-      font-weight: bold;
-    }
-    .standings-table tr:hover {
-      background-color: #f9f9f9;
-    }
-    .team-cell {
-      display: flex;
-      align-items: center;
-      text-align: left;
-    }
-    .team-cell .team-logo {
-      width: 30px;
-      height: 30px;
-      margin-right: 0.5rem;
-      margin-bottom: 0;
-    }
-    .groups-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1rem;
-    }
-    .group-card {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .group-header {
-      background-color: var(--primary);
-      color: white;
-      padding: 0.5rem;
-      font-weight: bold;
-      text-align: center;
-    }
-    .admin-form {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .form-group {
-      margin-bottom: 1rem;
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-    }
-    input[type="text"],
-    input[type="number"],
-    input[type="password"],
-    select {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 1rem;
-    }
-    button {
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: all 0.3s;
-    }
-    button:hover {
-      background-color: #0d5bba;
-    }
-    @media (max-width: 768px) {
-      .match-content {
-        flex-direction: column;
-        align-items: center;
-      }
-      .team {
-        width: 100%;
-        margin-bottom: 1rem;
-      }
-      .score-container {
-        width: 100%;
-        margin: 1rem 0;
-      }
-      .standings-table {
-        font-size: 0.9rem;
-      }
-      .team-cell {
-        flex-direction: column;
-        text-align: center;
-      }
-      .team-cell .team-logo {
-        margin-right: 0;
-        margin-bottom: 0.5rem;
-      }
-    }
-  </style>
+  <!-- Google Fonts for improved typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+ 
 </head>
 <body>
   <header>
     <h1>RoboSoccer Tournament</h1>
     <p id="current-date">February 17, 2025</p>
   </header>
+
   <div class="container">
     <div class="tabs">
       <div class="tab active" data-tab="live-matches">Live Matches</div>
       <div class="tab" data-tab="standings">Standings</div>
       <div class="tab" data-tab="groups">Groups</div>
+      <div class="tab" data-tab="teams">Teams</div>
       <div class="tab" data-tab="admin">Admin</div>
     </div>
 
     <div id="live-matches" class="tab-content active">
       <h2>Live Matches</h2>
-      <div id="matches-container"></div>
+      <div id="matches-container">
+        <!-- Matches will be populated here -->
+      </div>
     </div>
 
     <div id="standings" class="tab-content">
@@ -271,13 +51,24 @@
             <th>Pts</th>
           </tr>
         </thead>
-        <tbody id="standings-body"></tbody>
+        <tbody id="standings-body">
+          <!-- Standings will be populated here -->
+        </tbody>
       </table>
     </div>
 
     <div id="groups" class="tab-content">
       <h2>Tournament Groups</h2>
-      <div class="groups-container" id="groups-container"></div>
+      <div class="groups-container" id="groups-container">
+        <!-- Groups will be populated here -->
+      </div>
+    </div>
+
+    <div id="teams" class="tab-content">
+      <h2>Tournament Teams</h2>
+      <div class="teams-grid">
+        <!-- Teams will be populated here -->
+      </div>
     </div>
 
     <div id="admin" class="tab-content">
@@ -298,8 +89,30 @@
       <!-- Admin Content (hidden until login is successful) -->
       <div id="admin-content" style="display: none;">
         <h2>Admin Panel</h2>
+        
+        <!-- Add Team Management Section -->
         <div class="admin-form">
-          <!-- Update Match Section -->
+          <h3>Team Management</h3>
+          <div class="form-group">
+            <label for="new-team-name">Team Name:</label>
+            <input type="text" id="new-team-name" placeholder="Enter team name" />
+          </div>
+          <div class="form-group">
+            <label for="new-team-logo">Team Logo Text:</label>
+            <input type="text" id="new-team-logo" placeholder="Enter 2-3 letter logo text" maxlength="3" />
+          </div>
+          <div class="form-group">
+            <button id="add-team-btn">Add Team</button>
+          </div>
+          
+          <h4>Existing Teams</h4>
+          <div class="existing-teams">
+            <!-- Teams will be listed here -->
+          </div>
+        </div>
+
+        <!-- Existing Match Management Section -->
+        <div class="admin-form">
           <h3>Update Match Score</h3>
           <div class="form-group">
             <label for="match-select">Select Match:</label>
@@ -326,8 +139,6 @@
           <div class="form-group">
             <button id="update-score-btn">Update Score</button>
           </div>
-
-          <!-- Add Match Section -->
           <h3>Add New Match</h3>
           <div class="form-group">
             <label for="new-team1">Team 1:</label>
@@ -352,343 +163,31 @@
           <div class="form-group">
             <button id="add-match-btn">Add Match</button>
           </div>
-
-          <!-- Add Team Section (Logo not required) -->
-          <h3>Add New Team</h3>
-          <div class="form-group">
-            <label for="new-team-name">Team Name:</label>
-            <input type="text" id="new-team-name" placeholder="Enter team name" />
-          </div>
-          <div class="form-group">
-            <button id="add-team-btn">Add Team</button>
-          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <script>
-    // Global variables to store data from the backend
-    let teams = [];
-    let matches = [];
+  <!-- Add this modal markup at the end of the body -->
+  <div id="edit-team-modal">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <h3>Edit Team</h3>
+      <div class="form-group">
+        <label for="edit-team-name">Team Name:</label>
+        <input type="text" id="edit-team-name" />
+      </div>
+      <div class="form-group">
+        <label for="edit-team-logo">Team Logo Text:</label>
+        <input type="text" id="edit-team-logo" maxlength="3" />
+      </div>
+      <div class="form-group">
+        <button id="save-team-edit-btn">Save Changes</button>
+      </div>
+    </div>
+  </div>
 
-    // Fetch teams from the backend
-    async function fetchTeams() {
-      const response = await fetch('/api/teams');
-      teams = await response.json();
-    }
+<script src="script.js"></script>
 
-    // Fetch matches from the backend
-    async function fetchMatches() {
-      const response = await fetch('/api/matches');
-      matches = await response.json();
-    }
-
-    // Fetch standings from the backend
-    async function fetchStandings() {
-      const response = await fetch('/api/standings');
-      return await response.json();
-    }
-
-    // Render Matches
-    async function renderMatches() {
-      const container = document.getElementById('matches-container');
-      container.innerHTML = '';
-      matches.forEach(match => {
-        const team1 = teams.find(t => t.id === match.team1);
-        const team2 = teams.find(t => t.id === match.team2);
-        const matchCard = document.createElement('div');
-        matchCard.className = 'match-card';
-        matchCard.innerHTML = `
-          <div class="match-header">
-            <span>${match.group || 'Tournament Match'}</span>
-            <span class="match-status status-${match.status}">${match.status.toUpperCase()}</span>
-          </div>
-          <div class="match-content">
-            <div class="team">
-              <div class="team-logo"><span>${team1.logo}</span></div>
-              <div class="team-name">${team1.name}</div>
-            </div>
-            <div class="score-container">
-              <span class="score">${match.score1}</span>
-              <span class="score-divider">-</span>
-              <span class="score">${match.score2}</span>
-            </div>
-            <div class="team">
-              <div class="team-logo"><span>${team2.logo}</span></div>
-              <div class="team-name">${team2.name}</div>
-            </div>
-          </div>
-          <div class="match-footer">${match.time}</div>
-        `;
-        container.appendChild(matchCard);
-      });
-    }
-
-    // Render Standings
-    async function renderStandings() {
-      const standings = await fetchStandings();
-      const tbody = document.getElementById('standings-body');
-      tbody.innerHTML = '';
-      standings.forEach((team, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${index + 1}</td>
-          <td>
-            <div class="team-cell">
-              <div class="team-logo"><span>${team.logo}</span></div>
-              <span>${team.name}</span>
-            </div>
-          </td>
-          <td>${team.played}</td>
-          <td>${team.won}</td>
-          <td>${team.drawn}</td>
-          <td>${team.lost}</td>
-          <td>${team.goalsFor}</td>
-          <td>${team.goalsAgainst}</td>
-          <td>${team.goalDifference}</td>
-          <td><strong>${team.points}</strong></td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
-
-    // Render Groups
-    async function renderGroups() {
-      const groupsContainer = document.getElementById('groups-container');
-      groupsContainer.innerHTML = '';
-      const groups = [...new Set(matches.map(match => match.group).filter(Boolean))];
-      groups.forEach(groupName => {
-        const groupCard = document.createElement('div');
-        groupCard.className = 'group-card';
-        const groupMatches = matches.filter(match => match.group === groupName);
-        const groupTeamIds = new Set();
-        groupMatches.forEach(match => {
-          groupTeamIds.add(match.team1);
-          groupTeamIds.add(match.team2);
-        });
-        let standingsHTML = '';
-        teams.filter(team => groupTeamIds.has(team.id)).forEach((team, index) => {
-          standingsHTML += `
-            <tr>
-              <td>${index + 1}</td>
-              <td>
-                <div class="team-cell">
-                  <div class="team-logo"><span>${team.logo}</span></div>
-                  <span>${team.name}</span>
-                </div>
-              </td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-          `;
-        });
-        groupCard.innerHTML = `
-          <div class="group-header">${groupName}</div>
-          <table class="standings-table">
-            <thead>
-              <tr>
-                <th>Pos</th>
-                <th>Team</th>
-                <th>P</th>
-                <th>Pts</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${standingsHTML}
-            </tbody>
-          </table>
-        `;
-        groupsContainer.appendChild(groupCard);
-      });
-    }
-
-    // Populate admin dropdowns from backend data
-    async function populateAdminControls() {
-      const matchSelect = document.getElementById('match-select');
-      const newTeam1 = document.getElementById('new-team1');
-      const newTeam2 = document.getElementById('new-team2');
-      matchSelect.innerHTML = '<option value="">Select a match...</option>';
-      newTeam1.innerHTML = '<option value="">Select a team...</option>';
-      newTeam2.innerHTML = '<option value="">Select a team...</option>';
-      matches.forEach(match => {
-        const team1 = teams.find(t => t.id === match.team1);
-        const team2 = teams.find(t => t.id === match.team2);
-        const option = document.createElement('option');
-        option.value = match.id;
-        option.textContent = `${team1.name} vs ${team2.name} (${match.time})`;
-        matchSelect.appendChild(option);
-      });
-      teams.forEach(team => {
-        const option1 = document.createElement('option');
-        option1.value = team.id;
-        option1.textContent = team.name;
-        newTeam1.appendChild(option1);
-        const option2 = document.createElement('option');
-        option2.value = team.id;
-        option2.textContent = team.name;
-        newTeam2.appendChild(option2);
-      });
-    }
-
-    // Setup admin controls to update/add matches via the backend API
-    function setupAdminControls() {
-      const matchSelect = document.getElementById('match-select');
-      const team1Score = document.getElementById('team1-score');
-      const team2Score = document.getElementById('team2-score');
-      const matchStatus = document.getElementById('match-status');
-      const updateScoreBtn = document.getElementById('update-score-btn');
-      const newTeam1 = document.getElementById('new-team1');
-      const newTeam2 = document.getElementById('new-team2');
-      const newMatchTime = document.getElementById('new-match-time');
-      const newMatchGroup = document.getElementById('new-match-group');
-      const addMatchBtn = document.getElementById('add-match-btn');
-
-      // Update match score
-      updateScoreBtn.addEventListener('click', async () => {
-        const matchId = matchSelect.value;
-        if (!matchId) {
-          alert('Please select a match!');
-          return;
-        }
-        const updatedData = {
-          score1: parseInt(team1Score.value) || 0,
-          score2: parseInt(team2Score.value) || 0,
-          status: matchStatus.value
-        };
-        await fetch(`/api/matches/${matchId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedData)
-        });
-        await loadData();
-        alert('Match updated successfully!');
-      });
-
-      // Populate score inputs when a match is selected
-      matchSelect.addEventListener('change', () => {
-        const matchId = matchSelect.value;
-        if (!matchId) return;
-        const match = matches.find(m => m.id == matchId);
-        team1Score.value = match.score1;
-        team2Score.value = match.score2;
-        matchStatus.value = match.status;
-      });
-
-      // Add new match
-      addMatchBtn.addEventListener('click', async () => {
-        const team1Id = parseInt(newTeam1.value);
-        const team2Id = parseInt(newTeam2.value);
-        const time = newMatchTime.value;
-        const group = newMatchGroup.value;
-        if (!team1Id || !team2Id || team1Id === team2Id || !time) {
-          alert('Please enter valid data!');
-          return;
-        }
-        const newMatch = {
-          team1: team1Id,
-          team2: team2Id,
-          score1: 0,
-          score2: 0,
-          status: 'upcoming',
-          time: time,
-          group: group || null
-        };
-        await fetch('/api/matches', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newMatch)
-        });
-        await loadData();
-        alert('Match added successfully!');
-      });
-    }
-
-    // Setup the Add New Team option (team logo is generated automatically)
-    document.getElementById('add-team-btn').addEventListener('click', async () => {
-      const teamName = document.getElementById('new-team-name').value.trim();
-      if (!teamName) {
-        alert('Please enter a team name!');
-        return;
-      }
-      // Generate a default abbreviation (first 2 letters in uppercase)
-      const defaultLogo = teamName.substring(0,2).toUpperCase();
-      const newTeam = { name: teamName, logo: defaultLogo };
-      try {
-        const response = await fetch('/api/teams', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newTeam)
-        });
-        if (response.ok) {
-          await loadData();
-          alert('Team added successfully!');
-          document.getElementById('new-team-name').value = '';
-          await populateAdminControls();
-        } else {
-          const errorText = await response.text();
-          alert('Failed to add team! ' + errorText);
-        }
-      } catch (err) {
-        console.error(err);
-        alert('An error occurred while adding team!');
-      }
-    });
-
-    // Load data and render all sections
-    async function loadData() {
-      await Promise.all([fetchTeams(), fetchMatches()]);
-      await renderAll();
-    }
-
-    async function renderAll() {
-      await renderMatches();
-      await renderStandings();
-      await renderGroups();
-    }
-
-    // Admin login logic
-    document.getElementById('admin-login-btn').addEventListener('click', async () => {
-      const username = document.getElementById('admin-username').value;
-      const password = document.getElementById('admin-password').value;
-      if (username === 'Nst@2006' && password === 'Manmath@2006') {
-        document.getElementById('admin-login').style.display = 'none';
-        document.getElementById('admin-content').style.display = 'block';
-        await populateAdminControls();
-        setupAdminControls();
-        alert('Login successful!');
-      } else {
-        alert('Invalid credentials!');
-      }
-    });
-
-    // Tab functionality
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
-      });
-    });
-
-    // Set current date
-    document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-
-    // Initialize data and set up live polling for updates
-    document.addEventListener('DOMContentLoaded', async () => {
-      await loadData();
-      setInterval(async () => {
-        await fetchMatches();
-        await renderAll();
-      }, 5000);
-    });
-  </script>
 </body>
 </html>
-
